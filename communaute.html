@@ -41,6 +41,26 @@
   <!-- ── ÉVÉNEMENTS ─────────────────────────────── -->
   <section class="comm-section">
     <div class="section-title blue">— ÉVÉNEMENTS —</div>
+
+    <!-- Bouton créer event -->
+    <div style="text-align:center;margin-bottom:2rem;">
+      <button class="mc-btn mc-btn-blue" id="toggle-event-form">+ CRÉER UN ÉVÉNEMENT</button>
+    </div>
+
+    <!-- Formulaire création event (caché par défaut) -->
+    <form id="event-form" class="event-create-form" style="display:none;">
+      <div class="event-form-grid">
+        <input  id="ev-title" class="comm-input" type="text"           placeholder="Titre de l'événement" maxlength="80" required>
+        <input  id="ev-date"  class="comm-input" type="datetime-local" required>
+        <textarea id="ev-desc" class="comm-input ev-textarea"          placeholder="Description..." maxlength="500" required></textarea>
+      </div>
+      <div class="event-form-footer">
+        <button type="submit" class="mc-btn mc-btn-green">PUBLIER</button>
+        <button type="button" class="mc-btn mc-btn-unreg" id="cancel-event-form">ANNULER</button>
+        <span id="ev-msg" class="comm-feedback"></span>
+      </div>
+    </form>
+
     <div id="events-list"><div class="comm-loading">Chargement...</div></div>
   </section>
 
@@ -226,6 +246,43 @@
       msg.style.color = 'var(--green)';
       setTimeout(() => msg.textContent = '', 3000);
       loadComments();
+    } else {
+      msg.textContent = 'Erreur, réessaie.';
+      msg.style.color = 'var(--pink)';
+    }
+  });
+
+  // ── Create event ────────────────────────────────
+  document.getElementById('toggle-event-form').addEventListener('click', () => {
+    const f = document.getElementById('event-form');
+    const open = f.style.display === 'none';
+    f.style.display = open ? 'block' : 'none';
+    document.getElementById('toggle-event-form').textContent = open ? '✕ FERMER' : '+ CRÉER UN ÉVÉNEMENT';
+  });
+
+  document.getElementById('cancel-event-form').addEventListener('click', () => {
+    document.getElementById('event-form').style.display = 'none';
+    document.getElementById('toggle-event-form').textContent = '+ CRÉER UN ÉVÉNEMENT';
+  });
+
+  document.getElementById('event-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const title       = document.getElementById('ev-title').value.trim();
+    const description = document.getElementById('ev-desc').value.trim();
+    const event_date  = new Date(document.getElementById('ev-date').value).toISOString();
+
+    const btn = e.target.querySelector('[type=submit]');
+    const msg = document.getElementById('ev-msg');
+    btn.textContent = '...'; btn.disabled = true;
+
+    const { error } = await db.from('qt_events').insert({ title, description, event_date });
+    btn.textContent = 'PUBLIER'; btn.disabled = false;
+
+    if (!error) {
+      e.target.reset();
+      document.getElementById('event-form').style.display = 'none';
+      document.getElementById('toggle-event-form').textContent = '+ CRÉER UN ÉVÉNEMENT';
+      loadEvents();
     } else {
       msg.textContent = 'Erreur, réessaie.';
       msg.style.color = 'var(--pink)';
