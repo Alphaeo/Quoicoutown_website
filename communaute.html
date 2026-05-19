@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communauté — Quoicoutown S3 Forever</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div id="pixelBg"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo-brand">
+      <img src="logo.svg" alt="QT" class="nav-logo-img">
+      <span class="nav-brand">QT</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Accueil</a>
+      <a href="consignes.html"   class="nav-link">Rejoindre</a>
+      <a href="equipe.html"      class="nav-link">Notre Équipe</a>
+      <a href="merch.html"       class="nav-link">Merch</a>
+      <a href="communaute.html"  class="nav-link active">Communauté</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ───────────────────────────────────── -->
+  <div class="page-hero">
+    <h1 style="color:var(--blue);text-shadow:3px 3px 0 var(--blue-dark),0 0 30px rgba(79,195,247,.5);">COMMUNAUTÉ</h1>
+    <p>Événements à venir · Avis des joueurs</p>
+  </div>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── ÉVÉNEMENTS ─────────────────────────────── -->
+  <section class="comm-section">
+    <div class="section-title blue">— ÉVÉNEMENTS —</div>
+    <div id="events-list"><div class="comm-loading">Chargement...</div></div>
+  </section>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── COMMENTAIRES ───────────────────────────── -->
+  <section class="comm-section">
+    <div class="section-title green">— AVIS &amp; COMMENTAIRES —</div>
+
+    <form id="comment-form" class="comm-form">
+      <div class="comm-form-row">
+        <input id="comm-pseudo"   class="comm-input"    type="text"     placeholder="Ton pseudo Minecraft" maxlength="32" required>
+        <input id="comm-content"  class="comm-input comm-input-wide" type="text" placeholder="Ton avis sur le serveur..." maxlength="500" required>
+        <button type="submit" class="mc-btn mc-btn-green">ENVOYER</button>
+      </div>
+      <div id="comm-msg" class="comm-feedback"></div>
+    </form>
+
+    <div id="comments-list"><div class="comm-loading">Chargement...</div></div>
+  </section>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <footer>
+    <p>QUOICOUTOWN &nbsp;·&nbsp; Saison 3 <em>Forever</em> &nbsp;·&nbsp; 2025–2026</p>
+  </footer>
+
+  <!-- ── SCRIPT ─────────────────────────────────── -->
+  <script>
+  // ── Supabase init ────────────────────────────────
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://mgffaecdbgzyqsysxntk.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nZmZhZWNkYmd6eXFzeXN4bnRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDU1NDgsImV4cCI6MjA5MTkyMTU0OH0.jjZTa09BKwQ_cRiBms-1bQNrwPc5PuJ6iccjcQycGLk'
+  );
+
+  let myPseudo = localStorage.getItem('qt_pseudo') || '';
+
+  // ── Utils ────────────────────────────────────────
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function timeAgo(iso) {
+    const s = (Date.now() - new Date(iso)) / 1000;
+    if (s < 60)    return 'à l\'instant';
+    if (s < 3600)  return `il y a ${Math.floor(s/60)}min`;
+    if (s < 86400) return `il y a ${Math.floor(s/3600)}h`;
+    return `il y a ${Math.floor(s/86400)}j`;
+  }
+
+  const COLORS = ['#5AA612','#4FC3F7','#FF6B9D','#FFD700','#FF8C00','#A78BFA'];
+  function pseudoColor(p) {
+    let h = 0;
+    for (const c of p) h = (h * 31 + c.charCodeAt(0)) & 0xFFFF;
+    return COLORS[h % COLORS.length];
+  }
+
+  function fmtDate(iso) {
+    return new Intl.DateTimeFormat('fr-FR', {
+      weekday:'long', day:'numeric', month:'long',
+      hour:'2-digit', minute:'2-digit', timeZone:'Europe/Paris'
+    }).format(new Date(iso));
+  }
+
+  // ── Events ──────────────────────────────────────
+  async function loadEvents() {
+    const { data, error } = await db
+      .from('qt_events')
+      .select('id, title, description, event_date, qt_event_registrations(pseudo)')
+      .order('event_date', { ascending: true });
+
+    const el = document.getElementById('events-list');
+    if (error || !data) { el.innerHTML = '<p class="comm-empty">Impossible de charger les événements.</p>'; return; }
+    if (!data.length)   { el.innerHTML = '<p class="comm-empty">Aucun événement prévu pour l\'instant.</p>'; return; }
+
+    el.innerHTML = data.map(renderEvent).join('');
+    data.forEach(ev => {
+      document.getElementById(`reg-form-${ev.id}`)
+        ?.addEventListener('submit', e => handleRegister(e, ev.id));
+      document.getElementById(`unreg-${ev.id}`)
+        ?.addEventListener('click', () => handleUnregister(ev.id));
+    });
+  }
+
+  function renderEvent(ev) {
+    const regs = ev.qt_event_registrations || [];
+    const isReg = myPseudo && regs.some(r => r.pseudo.toLowerCase() === myPseudo.toLowerCase());
+    const regTags = regs.length
+      ? regs.map(r => `<span class="reg-tag">${esc(r.pseudo)}</span>`).join('')
+      : '<span class="comm-empty-sm">Personne encore — sois le premier !</span>';
+
+    return `
+      <div class="event-card">
+        <div class="event-date-badge">📅 ${fmtDate(ev.event_date)}</div>
+        <div class="event-title">${esc(ev.title)}</div>
+        <div class="event-desc">${esc(ev.description)}</div>
+        <div class="event-reg-label">PARTICIPANTS (${regs.length})</div>
+        <div class="event-reg-list" id="reglist-${ev.id}">${regTags}</div>
+        ${isReg
+          ? `<div class="event-reg-ok">✓ Tu es inscrit(e) !</div>
+             <button class="mc-btn mc-btn-unreg" id="unreg-${ev.id}">SE DÉSINSCRIRE</button>`
+          : `<form class="reg-form" id="reg-form-${ev.id}">
+               <input class="reg-input" type="text" placeholder="Ton pseudo" maxlength="32" value="${esc(myPseudo)}" required>
+               <button type="submit" class="mc-btn mc-btn-green">S'INSCRIRE</button>
+             </form>`
+        }
+      </div>`;
+  }
+
+  async function handleRegister(e, evId) {
+    e.preventDefault();
+    const input = e.target.querySelector('input');
+    const pseudo = input.value.trim();
+    if (!pseudo) return;
+    myPseudo = pseudo;
+    localStorage.setItem('qt_pseudo', pseudo);
+
+    const btn = e.target.querySelector('button');
+    btn.textContent = '...'; btn.disabled = true;
+
+    const { error } = await db.from('qt_event_registrations').insert({ event_id: evId, pseudo });
+    if (error?.code === '23505') {
+      alert('Ce pseudo est déjà inscrit à cet événement !');
+      btn.textContent = "S'INSCRIRE"; btn.disabled = false;
+    } else {
+      loadEvents();
+    }
+  }
+
+  async function handleUnregister(evId) {
+    if (!myPseudo) return;
+    await db.from('qt_event_registrations').delete().eq('event_id', evId).eq('pseudo', myPseudo);
+    loadEvents();
+  }
+
+  // ── Comments ─────────────────────────────────────
+  async function loadComments() {
+    const { data, error } = await db
+      .from('qt_comments').select('*')
+      .order('created_at', { ascending: false }).limit(60);
+
+    const el = document.getElementById('comments-list');
+    if (error || !data) { el.innerHTML = '<p class="comm-empty">Impossible de charger les avis.</p>'; return; }
+    if (!data.length)   { el.innerHTML = '<p class="comm-empty">Sois le premier à laisser un avis !</p>'; return; }
+
+    el.innerHTML = `<div class="comments-grid">${data.map(renderComment).join('')}</div>`;
+  }
+
+  function renderComment(c) {
+    const col = pseudoColor(c.pseudo);
+    return `
+      <div class="comment-card" style="border-left-color:${col}">
+        <div class="comment-header">
+          <span class="comment-pseudo" style="color:${col}">${esc(c.pseudo)}</span>
+          <span class="comment-time">${timeAgo(c.created_at)}</span>
+        </div>
+        <div class="comment-content">${esc(c.content)}</div>
+      </div>`;
+  }
+
+  document.getElementById('comment-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const pseudo  = document.getElementById('comm-pseudo').value.trim();
+    const content = document.getElementById('comm-content').value.trim();
+    if (!pseudo || !content) return;
+    myPseudo = pseudo;
+    localStorage.setItem('qt_pseudo', pseudo);
+
+    const btn = e.target.querySelector('button');
+    const msg = document.getElementById('comm-msg');
+    btn.textContent = '...'; btn.disabled = true;
+
+    const { error } = await db.from('qt_comments').insert({ pseudo, content });
+    btn.textContent = 'ENVOYER'; btn.disabled = false;
+
+    if (!error) {
+      document.getElementById('comm-content').value = '';
+      msg.textContent = '✓ Avis envoyé !';
+      msg.style.color = 'var(--green)';
+      setTimeout(() => msg.textContent = '', 3000);
+      loadComments();
+    } else {
+      msg.textContent = 'Erreur, réessaie.';
+      msg.style.color = 'var(--pink)';
+    }
+  });
+
+  // ── Real-time ────────────────────────────────────
+  db.channel('community')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'qt_comments' }, loadComments)
+    .on('postgres_changes', { event: '*',      schema: 'public', table: 'qt_event_registrations' }, loadEvents)
+    .subscribe();
+
+  // ── Init ─────────────────────────────────────────
+  loadEvents();
+  loadComments();
+  if (myPseudo) document.getElementById('comm-pseudo').value = myPseudo;
+
+  // Pixel particles
+  const bg = document.getElementById('pixelBg');
+  const cols = ['#5AA612','#4FC3F7','#FF6B9D','#7DD632','#1565C0'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.className = 'px-particle';
+    el.style.cssText = [
+      `left:${Math.random()*100}%`,
+      `width:${4+Math.random()*8}px`,
+      `height:${4+Math.random()*8}px`,
+      `background:${cols[Math.floor(Math.random()*cols.length)]}`,
+      `animation-duration:${10+Math.random()*20}s`,
+      `animation-delay:${-Math.random()*20}s`,
+    ].join(';');
+    bg.appendChild(el);
+  }
+  </script>
+
+</body>
+</html>
