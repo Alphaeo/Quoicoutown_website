@@ -724,3 +724,151 @@ footer em { color: var(--pink); font-style: italic; }
   .dl-card, .ip-card { padding: 2rem 1.5rem; }
   .screens-strip .screenshot-item { width: 160px; }
 }
+
+/* ═════════════════════════════════════════════════════
+   MERCH PAGE
+   ════════════════════════════════════════════════════ */
+
+.merch-section {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 2rem 5rem;
+}
+
+.merch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.merch-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  box-shadow: 5px 5px 0 rgba(0,0,0,.6);
+  overflow: hidden;
+  transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s;
+}
+.merch-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 8px 10px 0 rgba(0,0,0,.6);
+  border-color: rgba(255,255,255,.18);
+}
+
+.merch-preview {
+  height: 200px;
+  background: #090c18;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.merch-svg { filter: brightness(.55) saturate(.7); display: block; }
+
+.merch-soon-badge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--px);
+  font-size: 11px;
+  color: var(--pink);
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px var(--pink);
+  background: rgba(8,10,18,.45);
+}
+
+.merch-info {
+  padding: 1.2rem 1.4rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.merch-name {
+  font-family: var(--px);
+  font-size: 9px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+.merch-price {
+  font-family: var(--px);
+  font-size: 9px;
+  color: var(--muted);
+}
+
+/* ── GDCC ──────────────────────────────────────────── */
+.gdcc-section {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+  background: #03040a;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  overflow: hidden;
+}
+
+.gdcc-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.gdcc-eyebrow {
+  font-family: var(--px);
+  font-size: 8px;
+  color: var(--muted);
+  letter-spacing: 5px;
+}
+
+.gdcc-title {
+  font-family: var(--px);
+  font-size: clamp(32px, 10vw, 72px);
+  color: #fff;
+  letter-spacing: 20px;
+  text-indent: 20px;
+  text-shadow:
+    0 0 40px rgba(255,255,255,.25),
+    0 0 80px rgba(255,255,255,.1);
+  animation: gdcc-flicker 6s ease-in-out infinite;
+}
+@keyframes gdcc-flicker {
+  0%,93%,100% { opacity:1; }
+  94%          { opacity:.25; }
+  95%          { opacity:1; }
+  97%          { opacity:.05; }
+  98%          { opacity:.9; }
+}
+
+.gdcc-sub {
+  font-family: var(--vt);
+  font-size: 22px;
+  color: var(--muted);
+  letter-spacing: 3px;
+}
+
+.gdcc-dots {
+  display: flex;
+  gap: 12px;
+  margin-top: .5rem;
+}
+.gdcc-dots span {
+  width: 8px;
+  height: 8px;
+  background: var(--muted);
+  display: block;
+  animation: dot-pulse 1.4s ease-in-out infinite;
+}
+.gdcc-dots span:nth-child(2) { animation-delay: .2s; }
+.gdcc-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes dot-pulse {
+  0%,80%,100% { opacity:.3; transform: scale(1); }
+  40%          { opacity:1;  transform: scale(1.4); }
+}
