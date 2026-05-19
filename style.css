@@ -85,6 +85,20 @@ body::after {
   backdrop-filter: blur(12px);
 }
 
+.nav-logo-brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+}
+
+.nav-logo-img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  image-rendering: pixelated;
+}
+
 .nav-brand {
   font-family: var(--px);
   font-size: 11px;
@@ -551,23 +565,154 @@ footer em { color: var(--pink); font-style: italic; }
   margin-top: .5rem;
 }
 
-/* Consignes screenshots strip */
-.screens-strip {
+/* Featured screenshot */
+.screenshot-featured { break-inside: avoid; }
+.screenshot-featured img { height: auto !important; max-height: 420px; object-fit: cover; }
+
+/* ── DOWNLOAD BLOCK (new) ─────────────────────────── */
+.dl-section {
   position: relative;
   z-index: 1;
   display: flex;
-  gap: 1.2rem;
   justify-content: center;
-  flex-wrap: wrap;
-  padding: 2rem 2rem 4rem;
-  max-width: 900px;
+  padding: 0 2rem 3rem;
+}
+
+.dl-block {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  width: 100%;
+  max-width: 680px;
+  padding: 1.6rem 2rem;
+  background: var(--surface);
+  border: 2px solid var(--green);
+  box-shadow: 0 0 30px rgba(90,166,18,.15), 5px 5px 0 var(--green-dark);
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s, filter .15s;
+  cursor: pointer;
+}
+.dl-block:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 45px rgba(90,166,18,.3), 7px 7px 0 var(--green-dark);
+  filter: brightness(1.08);
+}
+.dl-block:active { transform: translateY(0); }
+
+.dl-block-icon {
+  font-size: 30px;
+  line-height: 1;
+  flex-shrink: 0;
+  color: var(--green);
+  text-shadow: 0 0 16px var(--green);
+}
+
+.dl-block-text {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  flex: 1;
+}
+.dl-block-title {
+  font-family: var(--px);
+  font-size: 10px;
+  color: var(--green);
+  letter-spacing: 1px;
+}
+.dl-block-sub {
+  font-family: var(--vt);
+  font-size: 19px;
+  color: var(--muted);
+}
+
+.dl-block-arrow {
+  font-family: var(--px);
+  font-size: 14px;
+  color: var(--green);
+  flex-shrink: 0;
+  opacity: .7;
+  transition: transform .15s, opacity .15s;
+}
+.dl-block:hover .dl-block-arrow { transform: translateX(4px); opacity: 1; }
+
+/* ── TEAM PAGE ─────────────────────────────────────── */
+.team-section {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 2rem 5rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  max-width: 960px;
   margin: 0 auto;
 }
-.screens-strip .screenshot-item {
-  width: 210px;
-  flex-shrink: 0;
+
+.member-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  box-shadow: 5px 5px 0 rgba(0,0,0,.6);
+  padding: 2rem 1.5rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s;
+  cursor: default;
 }
-.screens-strip .screenshot-item img { height: 135px; }
+.member-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 8px 10px 0 rgba(0,0,0,.6);
+  border-color: rgba(255,255,255,.18);
+}
+
+.member-skin-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+.member-skin {
+  width: 100px;
+  height: 100px;
+  image-rendering: pixelated;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+.member-skin-shadow {
+  position: absolute;
+  bottom: -6px;
+  left: 10%;
+  width: 80%;
+  height: 14px;
+  background: rgba(0,0,0,.5);
+  filter: blur(6px);
+  border-radius: 50%;
+}
+
+.member-name {
+  font-family: var(--px);
+  font-size: 11px;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+.member-title {
+  font-family: var(--vt);
+  font-size: 20px;
+  letter-spacing: 2px;
+  padding: .2rem .8rem;
+  border: 1px solid;
+  line-height: 1.4;
+}
+.member-title.ceo  { color: var(--gold);  border-color: var(--gold);  background: rgba(255,215,0,.08);  }
+.member-title.cto  { color: var(--green); border-color: var(--green); background: rgba(90,166,18,.08); }
+.member-title.cfo  { color: var(--blue);  border-color: var(--blue);  background: rgba(79,195,247,.08); }
+.member-title.com  { color: var(--pink);  border-color: var(--pink);  background: rgba(255,107,157,.08); }
 
 /* ── RESPONSIVE ───────────────────────────────────── */
 @media (max-width: 640px) {

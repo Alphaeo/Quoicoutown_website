@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" shape-rendering="crispEdges">
+  <defs>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#5AA612"/>
+      <stop offset="48%"  stop-color="#4FC3F7"/>
+      <stop offset="100%" stop-color="#FF6B9D"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="45%" cy="38%" r="68%">
+      <stop offset="0%"   stop-color="#1b2340"/>
+      <stop offset="100%" stop-color="#070910"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer gradient ring -->
+  <circle cx="100" cy="100" r="99" fill="url(#ring)"/>
+  <!-- Dark background -->
+  <circle cx="100" cy="100" r="91" fill="url(#bg)"/>
+
+  <!-- ── PIXEL PIG FACE ──────────────────────────── -->
+  <!-- 8×8 grid, 10px/cell, 80×80px, origin (60,35) -->
+
+  <!-- Base pink face -->
+  <rect x="60" y="35" width="80" height="80" fill="#F4A4B8"/>
+
+  <!-- Shadow: right column (col 7) -->
+  <rect x="130" y="35" width="10" height="80" fill="#D88898"/>
+  <!-- Shadow: bottom row (row 7) -->
+  <rect x="60"  y="105" width="80" height="10" fill="#D88898"/>
+
+  <!-- Left eye (col 1, rows 2-3) -->
+  <rect x="70" y="55" width="10" height="20" fill="#18080A"/>
+  <!-- Left eye glint -->
+  <rect x="70" y="55" width="4"  height="4"  fill="#FFFFFF" opacity="0.4"/>
+
+  <!-- Right eye (col 6, rows 2-3) -->
+  <rect x="120" y="55" width="10" height="20" fill="#18080A"/>
+  <!-- Right eye glint -->
+  <rect x="120" y="55" width="4"  height="4"  fill="#FFFFFF" opacity="0.4"/>
+
+  <!-- Snout base (cols 1-6, rows 5-6) -->
+  <rect x="70" y="85" width="60" height="20" fill="#E07898"/>
+  <!-- Snout top highlight -->
+  <rect x="70" y="85" width="60" height="3"  fill="#F0A0B5" opacity="0.5"/>
+
+  <!-- Left nostril (col 2, row 6) -->
+  <rect x="80" y="95" width="10" height="10" fill="#7A1235"/>
+  <!-- Right nostril (col 5, row 6) -->
+  <rect x="110" y="95" width="10" height="10" fill="#7A1235"/>
+
+  <!-- ── QT3 BADGE ───────────────────────────────── -->
+  <rect x="63" y="126" width="74" height="30" fill="#090C18"/>
+  <!-- Top accent bar (gradient) -->
+  <rect x="63" y="126" width="74" height="3"  fill="url(#ring)"/>
+  <!-- Bottom accent bar (gradient) -->
+  <rect x="63" y="153" width="74" height="3"  fill="url(#ring)"/>
+
+  <!-- QT3 text -->
+  <text
+    x="100" y="148"
+    font-family="'Courier New', Courier, monospace"
+    font-size="15"
+    font-weight="900"
+    fill="#FFFFFF"
+    text-anchor="middle"
+    letter-spacing="5">QT3</text>
+
+  <!-- Corner pixels (decorative) -->
+  <rect x="84" y="122" width="5" height="5" fill="#5AA612" opacity="0.7"/>
+  <rect x="111" y="122" width="5" height="5" fill="#FF6B9D" opacity="0.7"/>
+</svg>

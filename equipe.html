@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notre Équipe — Quoicoutown S3 Forever</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+</head>
+<body>
+
+  <div id="pixelBg"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo-brand">
+      <img src="logo.svg" alt="QT" class="nav-logo-img">
+      <span class="nav-brand">QT</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html"     class="nav-link">Accueil</a>
+      <a href="consignes.html" class="nav-link">Rejoindre</a>
+      <a href="equipe.html"    class="nav-link active">Notre Équipe</a>
+    </div>
+  </nav>
+
+  <!-- ── PAGE HERO ──────────────────────────────── -->
+  <div class="page-hero">
+    <h1>NOTRE ÉQUIPE</h1>
+    <p>Les cerveaux derrière Quoicoutown.</p>
+  </div>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── TEAM GRID ──────────────────────────────── -->
+  <section class="team-section">
+    <div class="team-grid">
+
+      <!-- CEO -->
+      <div class="member-card">
+        <div class="member-skin-wrap">
+          <img
+            src="https://mc-heads.net/avatar/Crocolil/120"
+            alt="Crocolil skin"
+            class="member-skin"
+            onerror="this.src='https://mc-heads.net/avatar/Steve/120'"
+          >
+          <div class="member-skin-shadow"></div>
+        </div>
+        <div class="member-name">Crocolil</div>
+        <div class="member-title ceo">CEO</div>
+      </div>
+
+      <!-- CTO -->
+      <div class="member-card">
+        <div class="member-skin-wrap">
+          <img
+            src="https://mc-heads.net/avatar/Auggy/120"
+            alt="Auggy skin"
+            class="member-skin"
+            onerror="this.src='https://mc-heads.net/avatar/Steve/120'"
+          >
+          <div class="member-skin-shadow"></div>
+        </div>
+        <div class="member-name">Auggy</div>
+        <div class="member-title cto">CTO</div>
+      </div>
+
+      <!-- CFO -->
+      <div class="member-card">
+        <div class="member-skin-wrap">
+          <img
+            src="https://mc-heads.net/avatar/F2F_/120"
+            alt="F2F skin"
+            class="member-skin"
+            onerror="this.src='https://mc-heads.net/avatar/Notch/120'"
+          >
+          <div class="member-skin-shadow"></div>
+        </div>
+        <div class="member-name">F2F</div>
+        <div class="member-title cfo">CFO</div>
+      </div>
+
+      <!-- Head of Com -->
+      <div class="member-card">
+        <div class="member-skin-wrap">
+          <img
+            src="https://mc-heads.net/avatar/Hipnaus/120"
+            alt="Hipnaus skin"
+            class="member-skin"
+            onerror="this.src='https://mc-heads.net/avatar/Herobrine/120'"
+          >
+          <div class="member-skin-shadow"></div>
+        </div>
+        <div class="member-name">Hipnaus</div>
+        <div class="member-title com">Head of Com &amp;<br>Marketing</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <footer>
+    <p>QUOICOUTOWN &nbsp;·&nbsp; Saison 3 <em>Forever</em> &nbsp;·&nbsp; 2025–2026</p>
+  </footer>
+
+  <!-- ── JS : particules ────────────────────────── -->
+  <script>
+    const bg = document.getElementById('pixelBg');
+    const colors = ['#5AA612','#4FC3F7','#FF6B9D','#7DD632','#1565C0'];
+    for (let i = 0; i < 30; i++) {
+      const el = document.createElement('div');
+      el.className = 'px-particle';
+      el.style.cssText = [
+        `left:${Math.random()*100}%`,
+        `width:${4+Math.random()*8}px`,
+        `height:${4+Math.random()*8}px`,
+        `background:${colors[Math.floor(Math.random()*colors.length)]}`,
+        `animation-duration:${10+Math.random()*20}s`,
+        `animation-delay:${-Math.random()*20}s`,
+      ].join(';');
+      bg.appendChild(el);
+    }
+  </script>
+
+</body>
+</html>

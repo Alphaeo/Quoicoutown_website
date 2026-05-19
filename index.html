@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
 </head>
 <body>
 
@@ -15,15 +16,23 @@
 
   <!-- ── NAVBAR ─────────────────────────────────── -->
   <nav class="navbar">
-    <div class="nav-brand">QCT</div>
+    <a href="index.html" class="nav-logo-brand">
+      <img src="logo.svg" alt="QT" class="nav-logo-img">
+      <span class="nav-brand">QT</span>
+    </a>
     <div class="nav-links">
-      <a href="index.html"      class="nav-link active">Accueil</a>
-      <a href="consignes.html"  class="nav-link">Rejoindre</a>
+      <a href="index.html"     class="nav-link active">Accueil</a>
+      <a href="consignes.html" class="nav-link">Rejoindre</a>
+      <a href="equipe.html"    class="nav-link">Notre Équipe</a>
     </div>
   </nav>
 
   <!-- ── HERO ───────────────────────────────────── -->
   <section class="hero">
+    <div class="hero-logo-wrap" style="margin-bottom:2rem;">
+      <img src="logo.svg" alt="Quoicoutown Logo" class="hero-logo" style="width:160px;height:160px;display:block;margin:0 auto;">
+    </div>
+
     <p class="hero-eyebrow">✦ SERVEUR MINECRAFT ✦</p>
 
     <div class="hero-title">
@@ -31,10 +40,6 @@
       <span class="title-season">Saison 3</span>
       <span class="title-forever"><em>Forever</em></span>
     </div>
-
-    <p class="hero-desc">
-      Un serveur Minecraft entre amis — des mods, des builds épiques, et beaucoup trop de chaos depuis 2025.
-    </p>
 
     <div class="hero-cta">
       <a href="consignes.html" class="mc-btn mc-btn-green">► Rejoindre</a>
@@ -50,24 +55,9 @@
 
     <div class="screenshots-grid">
 
-      <div class="screenshot-item">
-        <img src="screens/2026-04-27_02.20.29.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-09_19.05.32.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-10_01.39.47.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-12_21.56.45.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-14_03.11.42.png" alt="Build Quoicoutown" loading="lazy">
+      <!-- Featured -->
+      <div class="screenshot-item screenshot-featured">
+        <img src="screens/2026-05-15_13.46.45.png" alt="Build Quoicoutown" loading="lazy">
       </div>
 
       <div class="screenshot-item">
@@ -83,35 +73,7 @@
       </div>
 
       <div class="screenshot-item">
-        <img src="screens/2026-05-15_13.46.44.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-15_13.46.45.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-17_14.55.57.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-17_14.55.58.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-17_14.56.00.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-17_14.56.02.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
         <img src="screens/2026-05-19_18.11.24.png" alt="Build Quoicoutown" loading="lazy">
-      </div>
-
-      <div class="screenshot-item">
-        <img src="screens/2026-05-19_18.11.35.png" alt="Build Quoicoutown" loading="lazy">
       </div>
 
     </div>
@@ -128,18 +90,16 @@
   <script>
     const bg = document.getElementById('pixelBg');
     const colors = ['#5AA612','#4FC3F7','#FF6B9D','#7DD632','#1565C0'];
-    const count = 30;
-
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 30; i++) {
       const el = document.createElement('div');
       el.className = 'px-particle';
       el.style.cssText = [
-        `left: ${Math.random()*100}%`,
-        `width: ${4 + Math.random()*8}px`,
-        `height: ${4 + Math.random()*8}px`,
-        `background: ${colors[Math.floor(Math.random()*colors.length)]}`,
-        `animation-duration: ${10 + Math.random()*20}s`,
-        `animation-delay: ${-Math.random()*20}s`,
+        `left:${Math.random()*100}%`,
+        `width:${4+Math.random()*8}px`,
+        `height:${4+Math.random()*8}px`,
+        `background:${colors[Math.floor(Math.random()*colors.length)]}`,
+        `animation-duration:${10+Math.random()*20}s`,
+        `animation-delay:${-Math.random()*20}s`,
       ].join(';');
       bg.appendChild(el);
     }
