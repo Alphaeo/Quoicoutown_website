@@ -9,103 +9,86 @@
       <stop offset="0%"   stop-color="#1b2340"/>
       <stop offset="100%" stop-color="#070910"/>
     </radialGradient>
-    <!-- Diamond sword glow -->
-    <filter id="sglow" x="-120%" y="-120%" width="340%" height="340%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+    <filter id="sglow" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur"/>
       <feColorMatrix in="blur" type="matrix"
-        values="0 0 0 0 0.12
-                0 0 0 0 0.88
+        values="0 0 0 0 0.10
+                0 0 0 0 0.85
                 0 0 0 0 1
-                0 0 0 1 0" result="colorBlur"/>
+                0 0 0 1.1 0" result="colorBlur"/>
       <feMerge>
         <feMergeNode in="colorBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-    <!-- Soft ambient blur -->
-    <filter id="amb" x="-100%" y="-100%" width="300%" height="300%">
-      <feGaussianBlur stdDeviation="12"/>
-    </filter>
+    <filter id="amb"><feGaussianBlur stdDeviation="15"/></filter>
   </defs>
 
-  <!-- ── RING & BACKGROUND ─────────────────────── -->
   <circle cx="100" cy="100" r="99" fill="url(#ring)"/>
   <circle cx="100" cy="100" r="91" fill="url(#bg)"/>
 
-  <!-- Ambient sword light (very soft, behind everything) -->
-  <ellipse cx="50" cy="44" rx="28" ry="28" fill="#39E8FF" opacity="0.09" filter="url(#amb)"/>
+  <ellipse cx="46" cy="44" rx="34" ry="34" fill="#39E8FF" opacity="0.12" filter="url(#amb)"/>
 
-  <!-- ── DIAMOND SWORD (behind pig) ───────────── -->
-  <!-- Guard centered at (95, 88), rotated -45° -->
-  <!-- Tip lands near (47, 40), pommel near (120, 113) -->
-  <g transform="translate(95,88) rotate(-45)" filter="url(#sglow)">
-    <!-- Blade tip -->
-    <polygon points="0,-70 4,-56 -4,-56" fill="#C8F8FF"/>
-    <!-- Blade body -->
-    <rect x="-4" y="-56" width="8" height="56" fill="#39E8FF"/>
-    <!-- Blade left highlight -->
-    <rect x="-4" y="-56" width="2" height="56" fill="#A8F4FF" opacity="0.9"/>
-    <!-- Blade right shadow -->
-    <rect x="2"  y="-56" width="2" height="56" fill="#0E90B0" opacity="0.7"/>
-    <!-- Guard -->
-    <rect x="-17" y="-4" width="34" height="8" fill="#127080"/>
-    <!-- Guard top highlight -->
-    <rect x="-17" y="-4" width="34" height="3" fill="#28B0C8" opacity="0.55"/>
-    <!-- Guard bottom shadow -->
-    <rect x="-17" y="2"  width="34" height="2" fill="#062828" opacity="0.6"/>
-    <!-- Handle -->
-    <rect x="-5" y="4"  width="10" height="25" fill="#9B6820"/>
-    <rect x="-5" y="8"  width="10" height="2"  fill="#5A3A10" opacity="0.75"/>
-    <rect x="-5" y="14" width="10" height="2"  fill="#5A3A10" opacity="0.75"/>
-    <rect x="-5" y="20" width="10" height="2"  fill="#5A3A10" opacity="0.75"/>
-    <!-- Pommel -->
-    <rect x="-7" y="29" width="14" height="10" fill="#127080"/>
-    <rect x="-7" y="29" width="14" height="3"  fill="#28B0C8" opacity="0.45"/>
+  <!-- ── DIAMOND SWORD ───────────────────────────── -->
+  <!--
+    Garde à (120, 118), rotation -45°
+    Pointe  → (46, 44)   haut-gauche, hors pig  ✓
+    Pommeau → (152, 150) bas-droite, hors pig   ✓
+  -->
+  <g transform="translate(120,118) rotate(-45)" filter="url(#sglow)">
+    <!-- Pointe -->
+    <polygon points="0,-105  10,-87 -10,-87" fill="#D8FCFF"/>
+    <!-- Lame -->
+    <rect x="-7" y="-87" width="14" height="87" fill="#39E8FF"/>
+    <rect x="-7" y="-87" width="3"  height="87" fill="#B0F6FF" opacity="0.9"/>
+    <rect x="4"  y="-87" width="3"  height="87" fill="#0C88AC" opacity="0.75"/>
+    <!-- Garde -->
+    <rect x="-22" y="-5" width="44" height="10" fill="#117080"/>
+    <rect x="-22" y="-5" width="44" height="4"  fill="#28B8CC" opacity="0.6"/>
+    <rect x="-22" y="3"  width="44" height="2"  fill="#041C1C" opacity="0.7"/>
+    <!-- Manche -->
+    <rect x="-7"  y="5"  width="14" height="28" fill="#9B6820"/>
+    <rect x="-7"  y="9"  width="14" height="2"  fill="#5A3A10" opacity="0.8"/>
+    <rect x="-7"  y="15" width="14" height="2"  fill="#5A3A10" opacity="0.8"/>
+    <rect x="-7"  y="21" width="14" height="2"  fill="#5A3A10" opacity="0.8"/>
+    <rect x="-7"  y="27" width="14" height="2"  fill="#5A3A10" opacity="0.8"/>
+    <!-- Pommeau -->
+    <rect x="-11" y="33" width="22" height="12" fill="#117080"/>
+    <rect x="-11" y="33" width="22" height="4"  fill="#28B8CC" opacity="0.45"/>
   </g>
 
-  <!-- Enchantment sparkles around blade tip -->
-  <g fill="#9AEFFF" opacity="0.80" shape-rendering="crispEdges">
-    <rect x="43" y="32" width="4" height="4"/>
-    <rect x="34" y="46" width="3" height="3"/>
-    <rect x="56" y="27" width="3" height="3"/>
-    <rect x="29" y="54" width="2" height="2"/>
-    <rect x="59" y="40" width="2" height="2"/>
-    <rect x="38" y="60" width="2" height="2"/>
+  <!-- Sparkles autour de la pointe (46, 44) -->
+  <g fill="#9AEFFF" opacity="0.85" shape-rendering="crispEdges">
+    <rect x="38" y="31" width="6" height="6"/>
+    <rect x="26" y="47" width="4" height="4"/>
+    <rect x="52" y="22" width="4" height="4"/>
+    <rect x="20" y="59" width="3" height="3"/>
+    <rect x="60" y="37" width="3" height="3"/>
+    <rect x="29" y="68" width="3" height="3"/>
+    <rect x="13" y="48" width="2" height="2"/>
   </g>
 
-  <!-- ── PIXEL PIG FACE (in front of sword) ──── -->
-  <!-- 8×8 grid, 10px/cell, 80×80, origin (60,35) -->
+  <!-- ── PIXEL PIG FACE ──────────────────────────── -->
   <rect x="60" y="35" width="80" height="80" fill="#F4A4B8"/>
-
-  <!-- Depth shadows -->
-  <rect x="130" y="35" width="10" height="80" fill="#D88898"/>
+  <rect x="130" y="35"  width="10" height="80" fill="#D88898"/>
   <rect x="60"  y="105" width="80" height="10" fill="#D88898"/>
-
-  <!-- Left eye -->
-  <rect x="70" y="55" width="10" height="20" fill="#18080A"/>
-  <rect x="70" y="55" width="4"  height="4"  fill="#FFFFFF" opacity="0.4"/>
-  <!-- Right eye -->
+  <rect x="70"  y="55" width="10" height="20" fill="#18080A"/>
+  <rect x="70"  y="55" width="4"  height="4"  fill="#FFFFFF" opacity="0.4"/>
   <rect x="120" y="55" width="10" height="20" fill="#18080A"/>
   <rect x="120" y="55" width="4"  height="4"  fill="#FFFFFF" opacity="0.4"/>
-
-  <!-- Snout -->
-  <rect x="70" y="85" width="60" height="20" fill="#E07898"/>
-  <rect x="70" y="85" width="60" height="3"  fill="#F0A0B5" opacity="0.5"/>
-  <!-- Nostrils -->
+  <rect x="70"  y="85" width="60" height="20" fill="#E07898"/>
+  <rect x="70"  y="85" width="60" height="3"  fill="#F0A0B5" opacity="0.5"/>
   <rect x="80"  y="95" width="10" height="10" fill="#7A1235"/>
   <rect x="110" y="95" width="10" height="10" fill="#7A1235"/>
 
-  <!-- ── QT3 BADGE ─────────────────────────────── -->
-  <rect x="63" y="126" width="74" height="30" fill="#090C18"/>
-  <rect x="63" y="126" width="74" height="3"  fill="url(#ring)"/>
-  <rect x="63" y="153" width="74" height="3"  fill="url(#ring)"/>
-  <text
-    x="100" y="148"
+  <!-- ── QT3 BADGE ──────────────────────────────── -->
+  <rect x="63"  y="126" width="74" height="30" fill="#090C18"/>
+  <rect x="63"  y="126" width="74" height="3"  fill="url(#ring)"/>
+  <rect x="63"  y="153" width="74" height="3"  fill="url(#ring)"/>
+  <text x="100" y="148"
     font-family="'Courier New', Courier, monospace"
     font-size="15" font-weight="900"
     fill="#FFFFFF" text-anchor="middle" letter-spacing="5">QT3</text>
-
-  <!-- Deco corner pixels -->
   <rect x="84"  y="122" width="5" height="5" fill="#5AA612" opacity="0.7"/>
   <rect x="111" y="122" width="5" height="5" fill="#FF6B9D" opacity="0.7"/>
 </svg>
