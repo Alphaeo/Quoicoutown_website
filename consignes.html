@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rejoindre — Quoicoutown S3 Forever</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="pixelBg"></div>
+
+  <!-- ── NAVBAR ─────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="nav-brand">QCT</div>
+    <div class="nav-links">
+      <a href="index.html"      class="nav-link">Accueil</a>
+      <a href="consignes.html"  class="nav-link active">Rejoindre</a>
+    </div>
+  </nav>
+
+  <!-- ── PAGE HERO ──────────────────────────────── -->
+  <div class="page-hero">
+    <h1>COMMENT REJOINDRE</h1>
+    <p>Suis les 4 étapes et tu seras en jeu en quelques minutes.</p>
+  </div>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── STEPS ──────────────────────────────────── -->
+  <section class="steps-section">
+
+    <!-- STEP 1 -->
+    <div class="step-card s1">
+      <div class="step-num">01</div>
+      <div class="step-title">INSTALLE PRISM LAUNCHER</div>
+      <div class="step-body">
+        <p>
+          Télécharge et installe <a href="https://prismlauncher.org" target="_blank">Prism Launcher</a> — c'est gratuit.
+          C'est le launcher qu'on utilise pour jouer avec tous les mods.
+        </p>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-card s2">
+      <div class="step-num">02</div>
+      <div class="step-title">CONNECTE-TOI</div>
+      <div class="step-body">
+        <p>
+          Une fois installé, connecte-toi avec ton compte <strong>Microsoft&nbsp;/&nbsp;Minecraft</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-card s3">
+      <div class="step-num">03</div>
+      <div class="step-title">IMPORTE LE MODPACK</div>
+      <div class="step-body">
+        <ul>
+          <li>Télécharge le <strong>.zip</strong> via le bouton ci-dessous</li>
+          <li>Dans Prism, clique <strong>"Add Instance"</strong> → <strong>"Import"</strong> et sélectionne le .zip</li>
+          <li>Prism télécharge et installe tous les mods automatiquement — ça peut prendre quelques minutes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-card s4">
+      <div class="step-num">04</div>
+      <div class="step-title">LANCE ET REJOINS</div>
+      <div class="step-body">
+        <ul>
+          <li>Lance l'instance que Prism vient de créer</li>
+          <li>Dans Minecraft : <strong>Multijoueur</strong> → <strong>Ajouter un serveur</strong></li>
+          <li>Adresse du serveur : <code>199.115.73.205:9095</code></li>
+          <li>Clique sur <strong>Rejoindre</strong> — et bonne chance !</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── DOWNLOAD ────────────────────────────────── -->
+  <section class="dl-section">
+    <div class="section-title pink">— TÉLÉCHARGER LE MODPACK —</div>
+    <div class="dl-card">
+      <div class="dl-card-title">QUOICOUTOWN — PRISM INSTANCE</div>
+      <div class="dl-card-desc">Modpack complet, prêt à importer dans Prism Launcher.</div>
+      <a href="https://fromsmash.com/Quoicoutown-Prism-instance" target="_blank" class="mc-btn mc-btn-green">
+        ⬇ TÉLÉCHARGER LE .ZIP
+      </a>
+    </div>
+  </section>
+
+  <!-- ── SERVER IP ───────────────────────────────── -->
+  <section class="ip-section">
+    <div class="ip-card">
+      <div class="ip-label">ADRESSE DU SERVEUR</div>
+      <div class="ip-value" id="ipValue" title="Cliquer pour copier">199.115.73.205:9095</div>
+      <div class="ip-hint" id="ipHint">cliquer pour copier</div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS STRIP ──────────────────────── -->
+  <div class="grad-rule"></div>
+
+  <section class="screenshots-section" style="padding-top:4rem;">
+    <div class="section-title blue">— UN APERÇU —</div>
+    <div class="screenshots-grid" style="columns: 2 240px;">
+
+      <div class="screenshot-item">
+        <img src="screens/2026-05-17_14.56.00.png" alt="Build Quoicoutown" loading="lazy">
+      </div>
+      <div class="screenshot-item">
+        <img src="screens/2026-05-17_14.56.02.png" alt="Build Quoicoutown" loading="lazy">
+      </div>
+      <div class="screenshot-item">
+        <img src="screens/2026-05-19_18.11.24.png" alt="Build Quoicoutown" loading="lazy">
+      </div>
+      <div class="screenshot-item">
+        <img src="screens/2026-05-19_18.11.35.png" alt="Build Quoicoutown" loading="lazy">
+      </div>
+
+    </div>
+  </section>
+
+  <div class="grad-rule"></div>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <footer>
+    <p>QUOICOUTOWN &nbsp;·&nbsp; Saison 3 <em>Forever</em> &nbsp;·&nbsp; 2025–2026</p>
+  </footer>
+
+  <!-- ── JS ──────────────────────────────────────── -->
+  <script>
+    // Pixel particles
+    const bg = document.getElementById('pixelBg');
+    const colors = ['#5AA612','#4FC3F7','#FF6B9D','#7DD632','#1565C0'];
+    for (let i = 0; i < 30; i++) {
+      const el = document.createElement('div');
+      el.className = 'px-particle';
+      el.style.cssText = [
+        `left: ${Math.random()*100}%`,
+        `width: ${4 + Math.random()*8}px`,
+        `height: ${4 + Math.random()*8}px`,
+        `background: ${colors[Math.floor(Math.random()*colors.length)]}`,
+        `animation-duration: ${10 + Math.random()*20}s`,
+        `animation-delay: ${-Math.random()*20}s`,
+      ].join(';');
+      bg.appendChild(el);
+    }
+
+    // Copy IP
+    const ipEl   = document.getElementById('ipValue');
+    const hintEl = document.getElementById('ipHint');
+    ipEl.addEventListener('click', () => {
+      navigator.clipboard.writeText('199.115.73.205:9095').then(() => {
+        hintEl.textContent = '✓ copié !';
+        hintEl.style.color = '#5AA612';
+        setTimeout(() => {
+          hintEl.textContent = 'cliquer pour copier';
+          hintEl.style.color = '';
+        }, 2000);
+      });
+    });
+  </script>
+
+</body>
+</html>
