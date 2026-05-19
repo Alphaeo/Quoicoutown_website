@@ -1119,3 +1119,68 @@ footer em { color: var(--pink); font-style: italic; }
   gap: 1rem;
   flex-wrap: wrap;
 }
+
+/* ── Admin corner ──────────────────────────────────── */
+.admin-corner {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .6rem;
+}
+
+.admin-toggle {
+  font-family: var(--px);
+  font-size: 10px;
+  color: var(--muted);
+  background: rgba(8,11,18,.85);
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+  backdrop-filter: blur(6px);
+}
+.admin-toggle:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+
+.admin-login {
+  background: var(--dark-2);
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0 rgba(0,0,0,.6);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  min-width: 230px;
+}
+
+/* Delete buttons */
+.del-comment-btn {
+  background: none;
+  border: none;
+  color: var(--pink);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 1px 5px;
+  opacity: .5;
+  transition: opacity .2s;
+  flex-shrink: 0;
+}
+.del-comment-btn:hover { opacity: 1; }
+
+.del-event-btn {
+  font-family: var(--px);
+  font-size: 7px;
+  color: #ff6b6b;
+  background: rgba(255,50,50,.08);
+  border: 1px solid rgba(255,50,50,.25);
+  cursor: pointer;
+  padding: 5px 12px;
+  letter-spacing: 1px;
+  margin-top: .8rem;
+  transition: background .2s;
+  display: block;
+}
+.del-event-btn:hover { background: rgba(255,50,50,.18); }

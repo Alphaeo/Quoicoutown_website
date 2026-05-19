@@ -42,17 +42,15 @@
   <section class="comm-section">
     <div class="section-title blue">— ÉVÉNEMENTS —</div>
 
-    <!-- Bouton créer event -->
     <div style="text-align:center;margin-bottom:2rem;">
       <button class="mc-btn mc-btn-blue" id="toggle-event-form">+ CRÉER UN ÉVÉNEMENT</button>
     </div>
 
-    <!-- Formulaire création event (caché par défaut) -->
     <form id="event-form" class="event-create-form" style="display:none;">
       <div class="event-form-grid">
-        <input  id="ev-title" class="comm-input" type="text"           placeholder="Titre de l'événement" maxlength="80" required>
-        <input  id="ev-date"  class="comm-input" type="datetime-local" required>
-        <textarea id="ev-desc" class="comm-input ev-textarea"          placeholder="Description..." maxlength="500" required></textarea>
+        <input    id="ev-title" class="comm-input"    type="text"           placeholder="Titre de l'événement" maxlength="80" required>
+        <input    id="ev-date"  class="comm-input"    type="datetime-local" required>
+        <textarea id="ev-desc"  class="comm-input ev-textarea"             placeholder="Description..." maxlength="500" required></textarea>
       </div>
       <div class="event-form-footer">
         <button type="submit" class="mc-btn mc-btn-green">PUBLIER</button>
@@ -72,8 +70,8 @@
 
     <form id="comment-form" class="comm-form">
       <div class="comm-form-row">
-        <input id="comm-pseudo"   class="comm-input"    type="text"     placeholder="Ton pseudo Minecraft" maxlength="32" required>
-        <input id="comm-content"  class="comm-input comm-input-wide" type="text" placeholder="Ton avis sur le serveur..." maxlength="500" required>
+        <input id="comm-pseudo"  class="comm-input"           type="text" placeholder="Ton pseudo Minecraft" maxlength="32" required>
+        <input id="comm-content" class="comm-input comm-input-wide" type="text" placeholder="Ton avis sur le serveur..." maxlength="500" required>
         <button type="submit" class="mc-btn mc-btn-green">ENVOYER</button>
       </div>
       <div id="comm-msg" class="comm-feedback"></div>
@@ -89,24 +87,39 @@
     <p>QUOICOUTOWN &nbsp;·&nbsp; Saison 3 <em>Forever</em> &nbsp;·&nbsp; 2025–2026</p>
   </footer>
 
+  <!-- ── ADMIN CORNER (discret, coin bas-droite) ── -->
+  <div class="admin-corner" id="admin-corner">
+    <div id="admin-panel" style="display:none;">
+      <form id="admin-login-form" class="admin-login">
+        <input id="admin-email"    class="comm-input" type="email"    placeholder="Email" autocomplete="username">
+        <input id="admin-password" class="comm-input" type="password" placeholder="Mot de passe" autocomplete="current-password">
+        <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
+          <button type="submit" class="mc-btn mc-btn-blue" style="font-size:7px;padding:8px 14px;">CONNEXION</button>
+          <span id="admin-msg" class="comm-feedback" style="font-size:14px;"></span>
+        </div>
+      </form>
+    </div>
+    <button class="admin-toggle" id="admin-btn">⚙</button>
+  </div>
+
   <!-- ── SCRIPT ─────────────────────────────────── -->
   <script>
-  // ── Supabase init ────────────────────────────────
   const { createClient } = supabase;
   const db = createClient(
     'https://mgffaecdbgzyqsysxntk.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nZmZhZWNkYmd6eXFzeXN4bnRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDU1NDgsImV4cCI6MjA5MTkyMTU0OH0.jjZTa09BKwQ_cRiBms-1bQNrwPc5PuJ6iccjcQycGLk'
   );
 
+  const ADMIN_EMAIL = 'louis.mathis2002@gmail.com';
   let myPseudo = localStorage.getItem('qt_pseudo') || '';
+  let isAdmin   = false;
 
-  // ── Utils ────────────────────────────────────────
+  // ── Utils ─────────────────────────────────────
   function esc(s) {
     return String(s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;')
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
   function timeAgo(iso) {
     const s = (Date.now() - new Date(iso)) / 1000;
     if (s < 60)    return 'à l\'instant';
@@ -114,7 +127,12 @@
     if (s < 86400) return `il y a ${Math.floor(s/3600)}h`;
     return `il y a ${Math.floor(s/86400)}j`;
   }
-
+  function fmtDate(iso) {
+    return new Intl.DateTimeFormat('fr-FR', {
+      weekday:'long', day:'numeric', month:'long',
+      hour:'2-digit', minute:'2-digit', timeZone:'Europe/Paris'
+    }).format(new Date(iso));
+  }
   const COLORS = ['#5AA612','#4FC3F7','#FF6B9D','#FFD700','#FF8C00','#A78BFA'];
   function pseudoColor(p) {
     let h = 0;
@@ -122,14 +140,61 @@
     return COLORS[h % COLORS.length];
   }
 
-  function fmtDate(iso) {
-    return new Intl.DateTimeFormat('fr-FR', {
-      weekday:'long', day:'numeric', month:'long',
-      hour:'2-digit', minute:'2-digit', timeZone:'Europe/Paris'
-    }).format(new Date(iso));
+  // ── Admin auth ────────────────────────────────
+  async function checkSession() {
+    const { data: { session } } = await db.auth.getSession();
+    setAdmin(session?.user?.email === ADMIN_EMAIL);
   }
 
-  // ── Events ──────────────────────────────────────
+  function setAdmin(val) {
+    isAdmin = val;
+    const btn = document.getElementById('admin-btn');
+    btn.textContent = val ? '⚙ ✓' : '⚙';
+    btn.style.color = val ? 'var(--green)' : '';
+    document.getElementById('admin-panel').style.display = 'none';
+    loadEvents();
+    loadComments();
+  }
+
+  document.getElementById('admin-btn').addEventListener('click', async () => {
+    if (isAdmin) {
+      await db.auth.signOut();
+      setAdmin(false);
+    } else {
+      const p = document.getElementById('admin-panel');
+      p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    }
+  });
+
+  document.getElementById('admin-login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email    = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    const msg      = document.getElementById('admin-msg');
+
+    // Try sign in
+    let { error } = await db.auth.signInWithPassword({ email, password });
+
+    // First time ever: create the account
+    if (error?.message?.includes('Invalid login credentials')) {
+      const { error: su } = await db.auth.signUp({ email, password });
+      if (!su) ({ error } = await db.auth.signInWithPassword({ email, password }));
+      else { msg.textContent = su.message; return; }
+    }
+
+    if (!error) {
+      if (email !== ADMIN_EMAIL) {
+        await db.auth.signOut();
+        msg.textContent = 'Accès refusé.';
+        return;
+      }
+      setAdmin(true);
+    } else {
+      msg.textContent = error.message;
+    }
+  });
+
+  // ── Events ────────────────────────────────────
   async function loadEvents() {
     const { data, error } = await db
       .from('qt_events')
@@ -142,36 +207,43 @@
 
     el.innerHTML = data.map(renderEvent).join('');
     data.forEach(ev => {
-      document.getElementById(`reg-form-${ev.id}`)
-        ?.addEventListener('submit', e => handleRegister(e, ev.id));
-      document.getElementById(`unreg-${ev.id}`)
-        ?.addEventListener('click', () => handleUnregister(ev.id));
+      document.getElementById(`reg-form-${ev.id}`)?.addEventListener('submit', e => handleRegister(e, ev.id));
+      document.getElementById(`unreg-${ev.id}`)?.addEventListener('click', () => handleUnregister(ev.id));
+      document.getElementById(`del-ev-${ev.id}`)?.addEventListener('click', () => deleteEvent(ev.id));
     });
   }
 
   function renderEvent(ev) {
-    const regs = ev.qt_event_registrations || [];
+    const regs  = ev.qt_event_registrations || [];
     const isReg = myPseudo && regs.some(r => r.pseudo.toLowerCase() === myPseudo.toLowerCase());
-    const regTags = regs.length
+    const tags  = regs.length
       ? regs.map(r => `<span class="reg-tag">${esc(r.pseudo)}</span>`).join('')
       : '<span class="comm-empty-sm">Personne encore — sois le premier !</span>';
-
+    const delBtn = isAdmin
+      ? `<button class="del-event-btn" id="del-ev-${ev.id}">✕ Supprimer l'événement</button>`
+      : '';
     return `
       <div class="event-card">
         <div class="event-date-badge">📅 ${fmtDate(ev.event_date)}</div>
         <div class="event-title">${esc(ev.title)}</div>
         <div class="event-desc">${esc(ev.description)}</div>
         <div class="event-reg-label">PARTICIPANTS (${regs.length})</div>
-        <div class="event-reg-list" id="reglist-${ev.id}">${regTags}</div>
+        <div class="event-reg-list">${tags}</div>
         ${isReg
           ? `<div class="event-reg-ok">✓ Tu es inscrit(e) !</div>
              <button class="mc-btn mc-btn-unreg" id="unreg-${ev.id}">SE DÉSINSCRIRE</button>`
           : `<form class="reg-form" id="reg-form-${ev.id}">
                <input class="reg-input" type="text" placeholder="Ton pseudo" maxlength="32" value="${esc(myPseudo)}" required>
                <button type="submit" class="mc-btn mc-btn-green">S'INSCRIRE</button>
-             </form>`
-        }
+             </form>`}
+        ${delBtn}
       </div>`;
+  }
+
+  async function deleteEvent(id) {
+    if (!confirm('Supprimer cet événement et toutes ses inscriptions ?')) return;
+    await db.from('qt_events').delete().eq('id', id);
+    loadEvents();
   }
 
   async function handleRegister(e, evId) {
@@ -181,17 +253,13 @@
     if (!pseudo) return;
     myPseudo = pseudo;
     localStorage.setItem('qt_pseudo', pseudo);
-
     const btn = e.target.querySelector('button');
     btn.textContent = '...'; btn.disabled = true;
-
     const { error } = await db.from('qt_event_registrations').insert({ event_id: evId, pseudo });
     if (error?.code === '23505') {
-      alert('Ce pseudo est déjà inscrit à cet événement !');
+      alert('Ce pseudo est déjà inscrit !');
       btn.textContent = "S'INSCRIRE"; btn.disabled = false;
-    } else {
-      loadEvents();
-    }
+    } else { loadEvents(); }
   }
 
   async function handleUnregister(evId) {
@@ -200,29 +268,71 @@
     loadEvents();
   }
 
-  // ── Comments ─────────────────────────────────────
+  // ── Event form ────────────────────────────────
+  document.getElementById('toggle-event-form').addEventListener('click', () => {
+    const f    = document.getElementById('event-form');
+    const open = f.style.display === 'none';
+    f.style.display = open ? 'block' : 'none';
+    document.getElementById('toggle-event-form').textContent = open ? '✕ FERMER' : '+ CRÉER UN ÉVÉNEMENT';
+  });
+  document.getElementById('cancel-event-form').addEventListener('click', () => {
+    document.getElementById('event-form').style.display = 'none';
+    document.getElementById('toggle-event-form').textContent = '+ CRÉER UN ÉVÉNEMENT';
+  });
+  document.getElementById('event-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const title      = document.getElementById('ev-title').value.trim();
+    const description= document.getElementById('ev-desc').value.trim();
+    const event_date = new Date(document.getElementById('ev-date').value).toISOString();
+    const btn = e.target.querySelector('[type=submit]');
+    btn.textContent = '...'; btn.disabled = true;
+    const { error } = await db.from('qt_events').insert({ title, description, event_date });
+    btn.textContent = 'PUBLIER'; btn.disabled = false;
+    if (!error) {
+      e.target.reset();
+      document.getElementById('event-form').style.display = 'none';
+      document.getElementById('toggle-event-form').textContent = '+ CRÉER UN ÉVÉNEMENT';
+      loadEvents();
+    }
+  });
+
+  // ── Comments ──────────────────────────────────
   async function loadComments() {
     const { data, error } = await db
       .from('qt_comments').select('*')
       .order('created_at', { ascending: false }).limit(60);
-
     const el = document.getElementById('comments-list');
     if (error || !data) { el.innerHTML = '<p class="comm-empty">Impossible de charger les avis.</p>'; return; }
     if (!data.length)   { el.innerHTML = '<p class="comm-empty">Sois le premier à laisser un avis !</p>'; return; }
-
     el.innerHTML = `<div class="comments-grid">${data.map(renderComment).join('')}</div>`;
+    if (isAdmin) {
+      el.querySelectorAll('.del-comment-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteComment(btn.dataset.id));
+      });
+    }
   }
 
   function renderComment(c) {
-    const col = pseudoColor(c.pseudo);
+    const col    = pseudoColor(c.pseudo);
+    const delBtn = isAdmin
+      ? `<button class="del-comment-btn" data-id="${c.id}" title="Supprimer">✕</button>`
+      : '';
     return `
       <div class="comment-card" style="border-left-color:${col}">
         <div class="comment-header">
           <span class="comment-pseudo" style="color:${col}">${esc(c.pseudo)}</span>
-          <span class="comment-time">${timeAgo(c.created_at)}</span>
+          <span style="display:flex;align-items:center;gap:.5rem;">
+            <span class="comment-time">${timeAgo(c.created_at)}</span>
+            ${delBtn}
+          </span>
         </div>
         <div class="comment-content">${esc(c.content)}</div>
       </div>`;
+  }
+
+  async function deleteComment(id) {
+    await db.from('qt_comments').delete().eq('id', id);
+    loadComments();
   }
 
   document.getElementById('comment-form').addEventListener('submit', async e => {
@@ -232,88 +342,39 @@
     if (!pseudo || !content) return;
     myPseudo = pseudo;
     localStorage.setItem('qt_pseudo', pseudo);
-
     const btn = e.target.querySelector('button');
     const msg = document.getElementById('comm-msg');
     btn.textContent = '...'; btn.disabled = true;
-
     const { error } = await db.from('qt_comments').insert({ pseudo, content });
     btn.textContent = 'ENVOYER'; btn.disabled = false;
-
     if (!error) {
       document.getElementById('comm-content').value = '';
       msg.textContent = '✓ Avis envoyé !';
       msg.style.color = 'var(--green)';
       setTimeout(() => msg.textContent = '', 3000);
       loadComments();
-    } else {
-      msg.textContent = 'Erreur, réessaie.';
-      msg.style.color = 'var(--pink)';
     }
   });
 
-  // ── Create event ────────────────────────────────
-  document.getElementById('toggle-event-form').addEventListener('click', () => {
-    const f = document.getElementById('event-form');
-    const open = f.style.display === 'none';
-    f.style.display = open ? 'block' : 'none';
-    document.getElementById('toggle-event-form').textContent = open ? '✕ FERMER' : '+ CRÉER UN ÉVÉNEMENT';
-  });
-
-  document.getElementById('cancel-event-form').addEventListener('click', () => {
-    document.getElementById('event-form').style.display = 'none';
-    document.getElementById('toggle-event-form').textContent = '+ CRÉER UN ÉVÉNEMENT';
-  });
-
-  document.getElementById('event-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const title       = document.getElementById('ev-title').value.trim();
-    const description = document.getElementById('ev-desc').value.trim();
-    const event_date  = new Date(document.getElementById('ev-date').value).toISOString();
-
-    const btn = e.target.querySelector('[type=submit]');
-    const msg = document.getElementById('ev-msg');
-    btn.textContent = '...'; btn.disabled = true;
-
-    const { error } = await db.from('qt_events').insert({ title, description, event_date });
-    btn.textContent = 'PUBLIER'; btn.disabled = false;
-
-    if (!error) {
-      e.target.reset();
-      document.getElementById('event-form').style.display = 'none';
-      document.getElementById('toggle-event-form').textContent = '+ CRÉER UN ÉVÉNEMENT';
-      loadEvents();
-    } else {
-      msg.textContent = 'Erreur, réessaie.';
-      msg.style.color = 'var(--pink)';
-    }
-  });
-
-  // ── Real-time ────────────────────────────────────
+  // ── Real-time ─────────────────────────────────
   db.channel('community')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'qt_comments' }, loadComments)
-    .on('postgres_changes', { event: '*',      schema: 'public', table: 'qt_event_registrations' }, loadEvents)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'qt_comments' },           loadComments)
+    .on('postgres_changes', { event: '*',      schema: 'public', table: 'qt_event_registrations' },loadEvents)
     .subscribe();
 
-  // ── Init ─────────────────────────────────────────
+  // ── Init ──────────────────────────────────────
+  checkSession();
   loadEvents();
   loadComments();
   if (myPseudo) document.getElementById('comm-pseudo').value = myPseudo;
 
-  // Pixel particles
+  // Particles
   const bg = document.getElementById('pixelBg');
-  const cols = ['#5AA612','#4FC3F7','#FF6B9D','#7DD632','#1565C0'];
+  const cls = ['#5AA612','#4FC3F7','#FF6B9D','#7DD632','#1565C0'];
   for (let i = 0; i < 30; i++) {
     const el = document.createElement('div');
     el.className = 'px-particle';
-    el.style.cssText = [
-      `left:${Math.random()*100}%`,
-      `width:${4+Math.random()*8}px`,
-      `height:${4+Math.random()*8}px`,
-      `background:${cols[Math.floor(Math.random()*cols.length)]}`,
-      `animation-duration:${10+Math.random()*20}s`,
-      `animation-delay:${-Math.random()*20}s`,
-    ].join(';');
+    el.style.cssText = [`left:${Math.random()*100}%`,`width:${4+Math.random()*8}px`,`height:${4+Math.random()*8}px`,`background:${cls[Math.floor(Math.random()*cls.length)]}`,`animation-duration:${10+Math.random()*20}s`,`animation-delay:${-Math.random()*20}s`].join(';');
     bg.appendChild(el);
   }
   </script>
